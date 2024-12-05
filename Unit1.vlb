@@ -1,0 +1,10 @@
+﻿[GameArea]
+Coordinates=75,10,76,36
+
+[]
+Coordinates=76,55,42,36
+Visible=True
+
+[Game]
+Coordinates=95,1,78,36
+
