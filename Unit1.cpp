@@ -20,12 +20,13 @@ std::mt19937 rng(std::random_device{}()); // Генератор случайных чисел
 std::uniform_int_distribution<int> dist(0, colorCount - 1); // Диапазон для цветов
 
 bool isFastFall = false; // Флаг ускоренного падения
-const int fastFallSpeed = 4; // Скорость ускоренного падения шарика
+const int fastFallSpeed = 6; // Скорость ускоренного падения шарика
 
 bool canRotateActiveBalls = true; // Флаг возможности вращения активных шариков
 
 const int radius = 20; // Радиус шарика
 const int fallSpeed = 1; // Скорость падения шарика
+int currentFallSpeed = fallSpeed; // Текущая скорость падения шарика
 
 const int width = 400; // ширина игрового поля
 const int height = 550; // высота игрового поля
@@ -70,6 +71,8 @@ void DropBalls()
 	AddBall(220, -radius, nextBallsCorols[1]);
 	AddBall(200, -radius - 35, nextBallsCorols[2]);
 
+	isFastFall = false;
+
 	// Обновляем цвета следующих шариков
 	nextBallsCorols.clear();
 	for (int i = 0; i < 3; i++)
@@ -91,9 +94,6 @@ void DropBalls()
 __fastcall TGameForm::TGameForm(TComponent* Owner)
 	: TForm(Owner)
 {
-	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
-
 	for (int i = 0; i < 3; ++i)
 	{
 		nextBallsCorols.push_back(colors[dist(rng)]);
@@ -136,13 +136,51 @@ void PhysicsProcess(std::vector<Ball>& balls)
 		Ball& currentBall = balls[i];
 
 		// Определяем текущую скорость падения
-		int currentFallSpeed = isFastFall ? fastFallSpeed : fallSpeed;
+		int fallSpeed = isFastFall ? fastFallSpeed : currentFallSpeed;
 
 		// Проверяем, достиг ли шар нижней границы экрана
-		if (currentBall.y + radius + currentFallSpeed > height)
+		if (currentBall.y + radius + fallSpeed > height)
 		{
 			currentBall.isActive = false;
 			currentBall.y = height - radius;
+
+			// Проверяем, находится ли шарик не на нужной позиции
+			if (currentBall.x % (2 * radius) == 0)
+			{
+				int offset = radius;
+				Ball* leftNeighbor = nullptr;
+				Ball* rightNeighbor = nullptr;
+
+				// Ищем соседей слева и справа
+				for (Ball& other : balls)
+				{
+					if (other.isActive) // Сосед на той же высоте
+					{
+						if (other.x == currentBall.x - 2 * radius) // Сосед слева
+							leftNeighbor = &other;
+						else if (other.x == currentBall.x + 2 * radius) // Сосед справа
+							rightNeighbor = &other;
+					}
+				}
+
+				// Если нет соседей, смещаем шарик влево
+				if (!leftNeighbor && !rightNeighbor)
+				{
+					currentBall.x -= offset;
+				}
+				// Если есть сосед, смещаем текущий шарик и соседа
+				else if (leftNeighbor)
+				{
+					currentBall.x += offset; // Смещаем текущий шарик вправо
+					leftNeighbor->x -= offset; // Смещаем соседа влево
+				}
+				else if (rightNeighbor)
+				{
+					currentBall.x -= offset; // Смещаем текущий шарик влево
+					rightNeighbor->x += offset; // Смещаем соседа вправо
+				}
+			}
+
 			continue;
 		}
 
@@ -167,7 +205,7 @@ void PhysicsProcess(std::vector<Ball>& balls)
 		for (Ball& otherBall : balls)
 		{
 			if (&currentBall != &otherBall &&
-				hypot(currentBall.x - otherBall.x, currentBall.y + currentFallSpeed - otherBall.y - 1) < 2 * radius)
+				hypot(currentBall.x - otherBall.x, currentBall.y + fallSpeed - otherBall.y - 1) < 2 * radius)
 			{
 				collidedBall = &otherBall;
 				isFastFall = false;
@@ -178,7 +216,7 @@ void PhysicsProcess(std::vector<Ball>& balls)
 		// Если не произошло столкновения с другими шарами — он падает
 		if (collidedBall == nullptr)
 		{
-			currentBall.y += currentFallSpeed;
+			currentBall.y += fallSpeed;
 			continue;
 		}
 
@@ -380,8 +418,20 @@ void CheckAndFixActiveBalls()
 	}
 }
 //---------------------------------------------------------------------------
+void UpdateFallSpeed()
+{
+	const int scoreThreshold = 100; // Очки, после которых увеличивается скорость
+	const int maxSpeed = 10; // Максимальная скорость падения
+
+	// Увеличиваем скорость каждые 'scoreThreshold' очков
+	currentFallSpeed = fallSpeed + score / scoreThreshold;
+	if (currentFallSpeed > maxSpeed)
+		currentFallSpeed = maxSpeed;
+}
+//---------------------------------------------------------------------------
 void __fastcall TGameForm::GameTimer(TObject *Sender)
 {
+	UpdateFallSpeed();
 	PhysicsProcess(balls);
 	CheckAndFixActiveBalls();
 	GameArea->Invalidate();

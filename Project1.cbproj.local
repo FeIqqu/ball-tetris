@@ -3,13 +3,13 @@
 	<Transactions>
     <Transaction>1899.12.30 00:00:00.000.167,C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Unit1.h=D:\Projects\ball-tetris\Unit1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.186,C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Project1.cbproj=D:\Projects\ball-tetris\Project1.cbproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.368,D:\Projects\ball-tetris\Project1.cbproj=D:\Projects\ball-tetris\Project1.cbproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.765,=C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.167,C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\Projects\ball-tetris\Unit1.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.150,C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Project1PCH1.h=D:\Projects\ball-tetris\Project1PCH1.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.765,=C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.482,=C:\Users\aleks\Desktop\ball-tetris\Unit3.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.167,C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Unit1.cpp=D:\Projects\ball-tetris\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.233,=C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
     <Transaction>1899.12.30 00:00:00.000.540,=C:\Users\aleks\Desktop\ball-tetris\Unit2.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.167,C:\Users\aleks\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\Projects\ball-tetris\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.368,D:\Projects\ball-tetris\Project1.cbproj=D:\Projects\ball-tetris\Project1.cbproj</Transaction>
   </Transactions>
 </BorlandProject>
